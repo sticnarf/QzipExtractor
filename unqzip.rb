@@ -28,11 +28,9 @@ end
 filenames.each do |filename|
     path = "#{folder_name}/#{filename}"
     FileUtils.mkdir_p(File::dirname(path))
-    f = File.new path, 'w'
     len = data.byteslice(offset...offset+4).unpack("N")[0]
     offset += 4
-    f.write Zlib::Inflate.inflate(data.byteslice(offset+4...offset+len))
+    IO::binwrite path, Zlib::Inflate.inflate(data.byteslice(offset+4...offset+len))
     offset += len + 2
-    f.close
     puts path
 end
